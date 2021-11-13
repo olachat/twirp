@@ -4,4 +4,4 @@ npm-debug.log
 /bin
 /release
 /build
-.iml
+*.iml
