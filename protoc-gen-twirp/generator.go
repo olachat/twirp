@@ -886,7 +886,7 @@ func (t *twirp) generateUtils() {
 
 	t.P(``)
 	t.P(`// doFormURLEncodedRequest makes a JSON request to the remote Twirp service.`)
-	t.P(`func doFormURLEncodedRequest(ctx `, t.pkgs["context"], `.Context, client HTTPClient, hooks *`, t.pkgs["twirp"], `.ClientHooks, URL string, in, `, t.pkgs["proto"], ` proto.Message) (_ `, t.pkgs["context"], `.Context, err error) {`)
+	t.P(`func doFormURLEncodedRequest(ctx `, t.pkgs["context"], `.Context, client HTTPClient, hooks *`, t.pkgs["twirp"], `.ClientHooks, URL string, in, out `, t.pkgs["proto"], ` proto.Message) (_ `, t.pkgs["context"], `.Context, err error) {`)
 	t.P(``)
 	t.P(`	encoder := `, t.pkgs["schema"], `.NewEncoder()`)
 	t.P(`	encoder.SetAliasTag("json")`)
@@ -895,7 +895,7 @@ func (t *twirp) generateUtils() {
 	t.P(`	if err != nil {`)
 	t.P(`		return ctx, wrapInternal(err, "failed to encode request with FormUrlEncoded")`)
 	t.P(`	}`)
-	t.P(`	reqBytes := `, t.pkgs["form"], `.Encode()`)
+	t.P(`	reqBytes := form.Encode()`)
 	t.P(``)
 	t.P(`	if err = ctx.Err(); err != nil {`)
 	t.P(`		return ctx, wrapInternal(err, "aborted because context was done")`)
