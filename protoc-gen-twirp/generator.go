@@ -1536,7 +1536,7 @@ func (t *twirp) generateServerFormURLEncodedMethod(service *descriptor.ServiceDe
 	t.P(`	return`)
 	t.P(`}`)
 	t.P(``)
-	t.P(`reqContent := new(LoginHuaweiRequest)`)
+	t.P(`  reqContent := new(`, t.goTypeName(method.GetInputType()), `)`)
 	t.P(``)
 	t.P(`decoder := `, t.pkgs["schema"], `.NewDecoder()`)
 	t.P(`decoder.IgnoreUnknownKeys(true)`)
