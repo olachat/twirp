@@ -886,7 +886,7 @@ func (t *twirp) generateUtils() {
 
 	t.P(``)
 	t.P(`// doFormURLEncodedRequest makes a JSON request to the remote Twirp service.`)
-	t.P(`func doFormURLEncodedRequest(ctx `, t.pkgs["context"], `.Context, client HTTPClient, hooks *`, t.pkgs["twirp"], `.ClientHooks, URL string, in, out `, t.pkgs["proto"], ` proto.Message) (_ `, t.pkgs["context"], `.Context, err error) {`)
+	t.P(`func doFormURLEncodedRequest(ctx `, t.pkgs["context"], `.Context, client HTTPClient, hooks *`, t.pkgs["twirp"], `.ClientHooks, URL string, in, out `, t.pkgs["proto"], `.Message) (_ `, t.pkgs["context"], `.Context, err error) {`)
 	t.P(``)
 	t.P(`	encoder := `, t.pkgs["schema"], `.NewEncoder()`)
 	t.P(`	encoder.SetAliasTag("json")`)
