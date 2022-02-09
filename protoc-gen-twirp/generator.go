@@ -1226,8 +1226,9 @@ func (t *twirp) generateClientHooks() {
 	t.P(`	if err != nil {`)
 	t.P(`		panic("twirp: could not dump request")`)
 	t.P(`	}`)
-	t.P(`	fmt.Println("\n\n")`)
+	t.P(`	fmt.Println("")`)
 	t.P(`	fmt.Println(string(dumpReqBytes))`)
+	t.P(`	fmt.Println("")`)
 	t.P(`}`)
 	t.P()
 	t.P(`func dumpResp(ctx context.Context, resp *http.Response){`)
@@ -1238,8 +1239,9 @@ func (t *twirp) generateClientHooks() {
 	t.P(`	if err != nil {`)
 	t.P(`		panic("twirp: could not dump response")`)
 	t.P(`	}`)
-	t.P(`	fmt.Println("\n\n")`)
+	t.P(`	fmt.Println("")`)
 	t.P(`	fmt.Println(string(dumpRespBytes))`)
+	t.P(`	fmt.Println("")`)
 	t.P(`}`)
 }
 
