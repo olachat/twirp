@@ -110,6 +110,7 @@ func (t *twirp) Generate(in *plugin.CodeGeneratorRequest) *plugin.CodeGeneratorR
 	t.registerPackageName("url")
 	t.registerPackageName("fmt")
 	t.registerPackageName("errors")
+	t.registerPackageName("httputil")
 
 	// Time to figure out package names of objects defined in protobuf. First,
 	// we'll figure out the name for the package we're generating.
@@ -354,6 +355,7 @@ func (t *twirp) generateUtilImports() {
 	t.P(`import `, t.pkgs["io"], ` "io"`)
 	t.P(`import `, t.pkgs["path"], ` "path"`)
 	t.P(`import `, t.pkgs["url"], ` "net/url"`)
+	t.P(`import `, t.pkgs["httputil"], ` "net/http/httputil"`)
 }
 
 // Generate utility functions used in Twirp code.
@@ -786,6 +788,9 @@ func (t *twirp) generateUtils() {
 	t.P(`  if err != nil {`)
 	t.P(`    return ctx, wrapInternal(err, "could not build request")`)
 	t.P(`  }`)
+	t.P()
+	t.P(`  dumpReq(ctx, req)`)
+	t.P()
 	t.P(`  ctx, err = callClientRequestPrepared(ctx, hooks, req)`)
 	t.P(`	 if err != nil {`)
 	t.P(`    return ctx, err`)
@@ -796,6 +801,8 @@ func (t *twirp) generateUtils() {
 	t.P(`  if err != nil {`)
 	t.P(`    return ctx, wrapInternal(err, "failed to do request")`)
 	t.P(`  }`)
+	t.P()
+	t.P(`  dumpResp(ctx, resp)`)
 	t.P()
 	t.P(`  defer func() {`)
 	t.P(`    cerr := resp.Body.Close()`)
@@ -842,6 +849,9 @@ func (t *twirp) generateUtils() {
 	t.P(`  if err != nil {`)
 	t.P(`    return ctx, wrapInternal(err, "could not build request")`)
 	t.P(`  }`)
+	t.P()
+	t.P(`  dumpReq(ctx, req)`)
+	t.P()
 	t.P(`  ctx, err = callClientRequestPrepared(ctx, hooks, req)`)
 	t.P(`	 if err != nil {`)
 	t.P(`    return ctx, err`)
@@ -852,6 +862,8 @@ func (t *twirp) generateUtils() {
 	t.P(`  if err != nil {`)
 	t.P(`    return ctx, wrapInternal(err, "failed to do request")`)
 	t.P(`  }`)
+	t.P()
+	t.P(`  dumpResp(ctx, resp)`)
 	t.P()
 	t.P(`  defer func() {`)
 	t.P(`    cerr := resp.Body.Close()`)
@@ -905,6 +917,9 @@ func (t *twirp) generateUtils() {
 	t.P(`	if err != nil {`)
 	t.P(`		return ctx, wrapInternal(err, "could not build request")`)
 	t.P(`	}`)
+	t.P()
+	t.P(`  dumpReq(ctx, req)`)
+	t.P()
 	t.P(`	ctx, err = callClientRequestPrepared(ctx, hooks, req)`)
 	t.P(`	if err != nil {`)
 	t.P(`		return ctx, err`)
@@ -915,6 +930,9 @@ func (t *twirp) generateUtils() {
 	t.P(`	if err != nil {`)
 	t.P(`		return ctx, wrapInternal(err, "failed to do request")`)
 	t.P(`	}`)
+	t.P()
+	t.P(`	dumpResp(ctx, resp)`)
+	t.P()
 	t.P(``)
 	t.P(`	defer func() {`)
 	t.P(`		cerr := resp.Body.Close()`)
@@ -946,7 +964,6 @@ func (t *twirp) generateUtils() {
 	t.P(`	return ctx, nil`)
 	t.P(`}`)
 	t.P()
-
 
 	t.P(`// Call twirp.ServerHooks.RequestReceived if the hook is available`)
 	t.P(`func callRequestReceived(ctx `, t.pkgs["context"], `.Context, h *`, t.pkgs["twirp"], `.ServerHooks) (`, t.pkgs["context"], `.Context, error) {`)
@@ -1199,6 +1216,28 @@ func (t *twirp) generateClientHooks() {
 	t.P(`    return`)
 	t.P(`  }`)
 	t.P(`  h.Error(ctx, err)`)
+	t.P(`}`)
+	t.P()
+	t.P(`func dumpReq(ctx context.Context, req *http.Request){`)
+	t.P(`	if !twirp.ClientLogRequest(ctx) {`)
+	t.P(`		return`)
+	t.P(`	}`)
+	t.P(`	dumpReqBytes, err := httputil.DumpRequest(req, true)`)
+	t.P(`	if err != nil {`)
+	t.P(`		panic("twirp: could not dump request")`)
+	t.P(`	}`)
+	t.P(`	fmt.Println(string(dumpReqBytes))`)
+	t.P(`}`)
+	t.P()
+	t.P(`func dumpResp(ctx context.Context, resp *http.Response){`)
+	t.P(`	if !twirp.ClientLogResponse(ctx) {`)
+	t.P(`		return`)
+	t.P(`	}`)
+	t.P(`	dumpRespBytes, err := httputil.DumpResponse(resp, true)`)
+	t.P(`	if err != nil {`)
+	t.P(`		panic("twirp: could not dump response")`)
+	t.P(`	}`)
+	t.P(`	fmt.Println(string(dumpRespBytes))`)
 	t.P(`}`)
 }
 
@@ -1516,7 +1555,6 @@ func (t *twirp) generateServerProtobufMethod(service *descriptor.ServiceDescript
 	t.P()
 }
 
-
 func (t *twirp) generateServerFormURLEncodedMethod(service *descriptor.ServiceDescriptorProto, method *descriptor.MethodDescriptorProto) {
 	servStruct := serviceStruct(service)
 	methName := methodNameCamelCased(method)
@@ -1591,7 +1629,6 @@ func (t *twirp) generateServerFormURLEncodedMethod(service *descriptor.ServiceDe
 	t.P(`  callResponseSent(ctx, s.hooks)`)
 	t.P(`}`)
 }
-
 
 func (t *twirp) generateClientInterceptorCaller(method *descriptor.MethodDescriptorProto) {
 	methName := methodNameCamelCased(method)

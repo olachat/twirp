@@ -25,4 +25,6 @@ const (
 	StatusCodeKey
 	RequestHeaderKey
 	ResponseWriterKey
+	ClientLogRequest
+	ClientLogResponse
 )

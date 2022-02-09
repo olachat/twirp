@@ -45,3 +45,11 @@ func WithStatusCode(ctx context.Context, code int) context.Context {
 func WithResponseWriter(ctx context.Context, w http.ResponseWriter) context.Context {
 	return context.WithValue(ctx, contextkeys.ResponseWriterKey, w)
 }
+
+func WithClientLogRequest(ctx context.Context, yes bool) context.Context {
+	return context.WithValue(ctx, contextkeys.ClientLogRequest, yes)
+}
+
+func WithClientLogResponse(ctx context.Context, yes bool) context.Context {
+	return context.WithValue(ctx, contextkeys.ClientLogResponse, yes)
+}
