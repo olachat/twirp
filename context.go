@@ -141,8 +141,8 @@ func AddHTTPResponseHeader(ctx context.Context, key, value string) error {
 	return nil
 }
 
-// ClientLogRequest dump http request during test phase
-func ClientLogRequest(ctx context.Context) (yes bool) {
+// WithClientLogRequest dump http request during test phase
+func WithClientLogRequest(ctx context.Context) (yes bool) {
 	value := ctx.Value(contextkeys.ClientLogRequest)
 	if v, ok := value.(bool); ok && v {
 		yes = true
@@ -150,8 +150,8 @@ func ClientLogRequest(ctx context.Context) (yes bool) {
 	return
 }
 
-// ClientLogResponse dump http response during test phase
-func ClientLogResponse(ctx context.Context) (yes bool) {
+// WithClientLogResponse dump http response during test phase
+func WithClientLogResponse(ctx context.Context) (yes bool) {
 	value := ctx.Value(contextkeys.ClientLogResponse)
 	if v, ok := value.(bool); ok && v {
 		yes = true
