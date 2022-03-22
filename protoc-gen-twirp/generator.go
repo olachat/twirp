@@ -1484,7 +1484,7 @@ func (t *twirp) generateServerJSONMethod(service *descriptor.ServiceDescriptorPr
 	t.P(`    s.writeError(ctx, resp, wrapInternal(err, "failed to marshal json response"))`)
 	t.P(`    return`)
 	t.P(`  }`)
-	t.P(`  if &`, t.pkgs["twirp_util"], `.CheckUseOldFormat(ctx) {`)
+	t.P(`  if `, t.pkgs["twirp_util"], `.CheckUseOldFormat(ctx) {`)
 	t.P(`      respBytes = twirp_util.GetOldSuccessResp(respBytes)`)
 	t.P(`  }`)
 	t.P()
