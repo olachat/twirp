@@ -327,7 +327,8 @@ func (e *twerr) MetaMap() map[string]string {
 }
 
 func (e *twerr) Error() string {
-	return fmt.Sprintf("twirp error %s: %s", e.code, e.msg)
+	// return fmt.Sprintf("twirp error %s: %s", e.code, e.msg)
+	return e.msg
 }
 
 // wrappedErr is the error returned by twirp.InternalErrorWith(err), which is used by clients.
