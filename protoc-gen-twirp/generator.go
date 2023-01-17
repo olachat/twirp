@@ -500,13 +500,13 @@ func (t *twirp) generateUtils() {
 
 	t.P(`// baseServicePath composes the path prefix for the service (without <Method>).`)
 	t.P(`// e.g.: baseServicePath("/twirp", "my.pkg", "MyService")`)
-	t.P(`//       returns => "/twirp/my.pkg.MyService/"`)
+	t.P(`//       returns => "/twirp/MyService/"`)
 	t.P(`// e.g.: baseServicePath("", "", "MyService")`)
 	t.P(`//       returns => "/MyService/"`)
 	t.P(`func baseServicePath(prefix, pkg, service string) string {`)
 	t.P(`  fullServiceName := service`)
 	t.P(`  if pkg != "" {`)
-	t.P(`    fullServiceName = pkg + "." + service`)
+	t.P(`    fullServiceName = service`)
 	t.P(`  }`)
 	t.P(`  return path.Join("/", prefix, fullServiceName) + "/"`)
 	t.P(`}`)
@@ -514,7 +514,7 @@ func (t *twirp) generateUtils() {
 
 	t.P(`// parseTwirpPath extracts path components form a valid Twirp route.`)
 	t.P(`// Expected format: "[<prefix>]/<package>.<Service>/<Method>"`)
-	t.P(`// e.g.: prefix, pkgService, method := parseTwirpPath("/twirp/pkg.Svc/MakeHat")`)
+	t.P(`// e.g.: prefix, pkgService, method := parseTwirpPath("/twirp/Svc/MakeHat")`)
 	t.P(`func parseTwirpPath(path string) (string, string, string) {`)
 	t.P(`  parts := `, t.pkgs["strings"], `.Split(path, "/")`)
 	t.P(`  if len(parts) < 2 {`)
@@ -1842,17 +1842,11 @@ func serviceNameLiteral(service *descriptor.ServiceDescriptorProto) string {
 
 func pkgServiceNameCamelCased(file *descriptor.FileDescriptorProto, service *descriptor.ServiceDescriptorProto) string {
 	name := serviceNameCamelCased(service)
-	if pkg := pkgName(file); pkg != "" {
-		name = pkg + "." + name
-	}
 	return name
 }
 
 func pkgServiceNameLiteral(file *descriptor.FileDescriptorProto, service *descriptor.ServiceDescriptorProto) string {
 	name := serviceNameLiteral(service)
-	if pkg := pkgName(file); pkg != "" {
-		name = pkg + "." + name
-	}
 	return name
 }
 
